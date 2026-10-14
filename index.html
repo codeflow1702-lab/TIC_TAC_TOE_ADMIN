@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <title>Admin Console · Tic Tac Toe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <section id="auth-view" class="auth-view">
+    <div class="auth-brand"><span class="brand-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>TIC TAC TOE</span><span class="brand-divider"></span><span class="brand-muted">ADMIN</span></div>
+    <main class="auth-card">
+      <div class="auth-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.7-3 8-7 10-4-2-7-5.3-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <p class="eyebrow">PRIVATE CONSOLE</p>
+      <h1>Welcome back.</h1>
+      <p class="auth-copy">Sign in with your administrator account to manage the game.</p>
+      <form id="login-form" autocomplete="on">
+        <label for="login-email">Email address</label>
+        <input id="login-email" name="email" type="email" autocomplete="username" placeholder="you@example.com" required>
+        <label for="login-password">Password</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button id="login-button" class="button primary full" type="submit">Sign in <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="auth-foot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Access is restricted to approved administrators.</div>
+    </main>
+    <p class="auth-bottom">TIC TAC TOE <span>·</span> ADMINISTRATION</p>
+  </section>
+
+  <div id="app-view" class="app-layout hidden">
+    <aside class="sidebar">
+      <a href="./" class="brand-link" aria-label="Admin overview">
+        <span class="brand-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="brand-word">TIC TAC TOE</span>
+      </a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Admin sections">
+        <button class="nav-item active" data-page="overview" type="button"><span class="nav-icon">▦</span> Overview</button>
+        <button class="nav-item" data-page="players" type="button"><span class="nav-icon">♙</span> Players <span id="players-nav-count" class="nav-count"></span></button>
+        <button class="nav-item" data-page="rooms" type="button"><span class="nav-icon">▦</span> Live rooms <span id="rooms-nav-count" class="nav-count"></span></button>
+        <button class="nav-item" data-page="activity" type="button"><span class="nav-icon">◷</span> Activity log</button>
+        <div class="nav-divider"></div>
+        <div class="sidebar-label">CONFIGURATION</div>
+        <button class="nav-item" data-page="settings" type="button"><span class="nav-icon">⚙</span> Game settings</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="security-note"><span class="security-dot"></span><span><strong>Protected console</strong><small>Admin access verified</small></span></div>
+        <a class="back-game" data-game-link href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" title="Set the game website URL in Game settings"><span>↗</span> Open game</a>
+        <div class="account-row"><div id="admin-avatar" class="avatar">A</div><div class="account-meta"><strong id="admin-name">Administrator</strong><small id="admin-email">Signed in</small></div><button id="logout-button" class="icon-button" title="Sign out" aria-label="Sign out" type="button">↪</button></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="mobile-header"><a href="./" class="brand-link" aria-label="Admin overview"><span class="brand-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-word">TTT <span>ADMIN</span></span></a><button id="mobile-logout" class="icon-button" type="button" aria-label="Sign out">↪</button></header>
+      <nav class="mobile-nav" aria-label="Admin sections">
+        <button class="nav-item active" data-page="overview" type="button">Overview</button>
+        <button class="nav-item" data-page="players" type="button">Players</button>
+        <button class="nav-item" data-page="rooms" type="button">Live rooms</button>
+        <button class="nav-item" data-page="activity" type="button">Activity log</button>
+        <button class="nav-item" data-page="settings" type="button">Settings</button>
+      </nav>
+      <div class="page-topbar"><div><div class="breadcrumb">ADMINISTRATION <span>/</span> <b id="breadcrumb-current">OVERVIEW</b></div><h1 id="page-title">Overview</h1><p id="page-subtitle">A live pulse on your game and community.</p></div><div class="top-actions"><span class="live-indicator"><i></i> Secure session</span><button id="refresh-button" class="button secondary" type="button"><span class="refresh-icon">↻</span> Refresh</button></div></div>
+      <div id="global-error" class="notice error-notice hidden" role="alert"></div>
+      <div id="global-success" class="notice success-notice hidden" role="status"></div>
+
+      <section id="page-overview" class="page active">
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-top"><span>Registered accounts</span><span class="stat-icon violet">♙</span></div><div id="stat-players" class="stat-value">—</div><div id="stat-players-note" class="stat-foot">Firebase Authentication</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Live matches</span><span class="stat-icon green">↔</span></div><div id="stat-playing" class="stat-value">—</div><div class="stat-foot"><span class="status-dot green-dot"></span> Currently in progress</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Waiting rooms</span><span class="stat-icon amber">◷</span></div><div id="stat-waiting" class="stat-value">—</div><div class="stat-foot">Looking for an opponent</div></article>
+          <article class="stat-card"><div class="stat-top"><span>Finished games</span><span class="stat-icon blue">✓</span></div><div id="stat-finished" class="stat-value">—</div><div class="stat-foot">Rooms currently marked finished</div></article>
+        </div>
+        <div class="overview-grid">
+          <article class="panel activity-panel"><div class="panel-heading"><div><h2>Match activity</h2><p>Room creation over the last 7 days</p></div><span class="soft-pill">7 DAYS</span></div><div id="activity-chart" class="activity-chart"><div class="chart-loading">Loading activity…</div></div></article>
+          <article class="panel health-panel"><div class="panel-heading"><div><h2>Game controls</h2><p>Current player-facing settings</p></div><button class="inline-link" data-go-page="settings" type="button">Manage ↗</button></div><div id="settings-summary" class="settings-summary"><div class="chart-loading">Loading settings…</div></div></article>
+        </div>
+        <article class="panel table-panel"><div class="panel-heading"><div><h2>Recent rooms</h2><p>Latest rooms updated in your game</p></div><button class="inline-link" data-go-page="rooms" type="button">View all rooms ↗</button></div><div id="recent-rooms" class="table-wrap"><div class="empty-state">Loading rooms…</div></div></article>
+      </section>
+
+      <section id="page-players" class="page hidden">
+        <div class="page-callout"><div class="callout-icon">♙</div><div><strong>Player directory</strong><p>Accounts come from Firebase Authentication. Player names are matched from recent room history.</p></div></div>
+        <article class="panel table-panel"><div class="table-tools"><div><h2>Players</h2><p id="players-caption">Browse accounts and account status.</p></div><div class="tool-actions"><label class="search-field"><span>⌕</span><input id="players-search" type="search" placeholder="Search name or UID" aria-label="Search players"></label><button id="players-load-more" class="button secondary" type="button">Load more</button></div></div><div id="players-table" class="table-wrap"><div class="empty-state">Sign in to load players.</div></div></article>
+      </section>
+
+      <section id="page-rooms" class="page hidden">
+        <article class="panel table-panel"><div class="table-tools"><div><h2>Room monitor</h2><p>Inspect rooms and close stuck or invalid matches.</p></div><div class="tool-actions"><label class="search-field"><span>⌕</span><input id="rooms-search" type="search" placeholder="Search room, code, player" aria-label="Search rooms"></label><select id="rooms-status" class="select-control" aria-label="Filter by room status"><option value="all">All statuses</option><option value="waiting">Waiting</option><option value="playing">Playing</option><option value="finished">Finished</option><option value="closed">Closed</option></select><button id="rooms-load-more" class="button secondary" type="button">Load more</button></div></div><div id="rooms-table" class="table-wrap"><div class="empty-state">Sign in to load rooms.</div></div></article>
+        <p class="small-note">Closing a room sets its status to closed. The player clients will receive the change through their live Firestore listener.</p>
+      </section>
+
+      <section id="page-activity" class="page hidden">
+        <article class="panel table-panel"><div class="table-tools"><div><h2>Administrative activity</h2><p>Security-sensitive actions performed from this console.</p></div><button id="audit-refresh" class="button secondary" type="button">Refresh log</button></div><div id="audit-list" class="audit-list"><div class="empty-state">Loading activity…</div></div></article>
+        <p class="small-note">This log records admin actions performed by the deployed admin functions. It does not claim to record every player move or every Firebase console action.</p>
+      </section>
+
+      <section id="page-settings" class="page hidden">
+        <div class="settings-intro"><div><span class="eyebrow">PLAYER EXPERIENCE</span><h2>Game settings</h2><p>Changes apply to new matchmaking and room creation. Existing matches are not interrupted by maintenance mode.</p></div><span class="settings-art">× <i>○</i></span></div>
+        <form id="settings-form" class="settings-form">
+          <article class="panel settings-panel"><div class="settings-row"><div class="setting-symbol">↔</div><div class="setting-copy"><strong>Quick Match</strong><p>Allow players to find an opponent automatically.</p></div><label class="switch"><input id="setting-quick" type="checkbox"><span></span></label></div><div class="panel-separator"></div><div class="settings-row"><div class="setting-symbol">⌁</div><div class="setting-copy"><strong>Private rooms</strong><p>Allow players to create or join rooms using invite codes.</p></div><label class="switch"><input id="setting-private" type="checkbox"><span></span></label></div><div class="panel-separator"></div><div class="settings-row"><div class="setting-symbol">⚠</div><div class="setting-copy"><strong>Maintenance mode</strong><p>Disable new games and show a maintenance notice. Current matches can finish.</p></div><label class="switch warning-switch"><input id="setting-maintenance" type="checkbox"><span></span></label></div><div id="maintenance-message-wrap" class="field-block hidden"><label for="setting-maintenance-message">Maintenance notice</label><input id="setting-maintenance-message" maxlength="160" type="text" placeholder="We'll be back shortly."></div></article>
+          <article class="panel settings-panel"><div class="settings-heading"><div class="setting-symbol">✦</div><div><strong>Announcement</strong><p>A short notice displayed in the game lobby.</p></div></div><div class="field-block"><label for="setting-announcement">Announcement text</label><textarea id="setting-announcement" maxlength="180" rows="3" placeholder="Share a release note, event, or notice…"></textarea><div class="field-foot"><span>Leave empty to hide the announcement.</span><span id="announcement-count">0 / 180</span></div></div><div class="field-block"><label for="setting-game-url">Public game website URL</label><input id="setting-game-url" type="url" inputmode="url" maxlength="300" placeholder="https://your-game-site.web.app"><div class="field-foot"><span>Used by the “Open game” link in this separate admin website. Must be HTTPS outside localhost.</span><span id="game-url-status">Not configured</span></div></div></article>
+          <div class="settings-actions"><span id="settings-save-state" class="muted-copy">Changes are saved to Firestore.</span><button id="settings-save" class="button primary" type="submit">Save settings <span>→</span></button></div>
+        </form>
+      </section>
+      <footer class="main-footer"><span>© <span id="year-now"></span> TIC TAC TOE</span><span>ADMIN CONSOLE <i>·</i> KEEP IT FAIR</span></footer>
+    </main>
+  </div>
+
+  <div id="confirm-modal" class="modal-backdrop hidden" role="presentation"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div id="modal-symbol" class="modal-symbol">!</div><h2 id="modal-title">Are you sure?</h2><p id="modal-copy">This action cannot be undone.</p><div class="modal-actions"><button id="modal-cancel" class="button secondary" type="button">Cancel</button><button id="modal-confirm" class="button danger" type="button">Confirm action</button></div></section></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
